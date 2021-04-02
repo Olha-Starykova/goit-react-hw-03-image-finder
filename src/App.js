@@ -9,26 +9,29 @@ class App extends Component {
     currentPage: 1,
     searchQuery: '',
   };
-  //получаем данные
-  componentDidMount() {
-    
-}
+ 
 
+    componentDidUpdate(prevProps, prevState) {
+    if (prevState.searchQuery !== this.state.searchQuery) {
+      this.fetchHits()
+    }
+  }
  
   //данные с сабмита
   onChangeQuery = query => {
     // console.log(query)
-   this.fetchHits(query)
-   this.setState({searchQuery: query})
+    this.setState({ searchQuery: query, currentPage: 1, hits: [] })
   };
 
-  fetchHits = (query) => {
-     const{currentPage}=this.state
-      axios.get(`https:pixabay.com/api/?q=${query}&per_page=12&&key=20314649-0be4b13706b99da5b0e7a5a44&image_type=photo&orientation=horizontalpage=${currentPage}`)
+
+
+  fetchHits = () => {
+     const{currentPage, searchQuery}=this.state
+      axios.get(`https:pixabay.com/api/?q=${searchQuery}&page=${currentPage}&key=20314649-0be4b13706b99da5b0e7a5a44&image_type=photo&orientation=horizontal&per_page=12`)
       .then(response => {
         console.log(response.data.hits);
-        this.setState(prevState=> ({
-          hits: response.data.hits,
+        this.setState(prevState => ({
+          hits: [...prevState.hits, ...response.data.hits],
           currentPage: prevState.currentPage + 1,
         }));
       });
@@ -45,7 +48,7 @@ class App extends Component {
         <Searchbar onSubmit={this.onChangeQuery} />
         <ul>
           {hits.map(({ id, webformatURL }) =>
-            <li key={id}>
+            <li key={id}>  
             
               <img src={webformatURL} alt={webformatURL} />
               
