@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
  import Searchbar from './components/Searchbar/Searchbar'
- import axios from 'axios';
+import api from './services/api'
 
 
 class App extends Component {
@@ -20,18 +20,39 @@ class App extends Component {
   //данные с сабмита
   onChangeQuery = query => {
     // console.log(query)
-    this.setState({ searchQuery: query, currentPage: 1, hits: [] })
+    this.setState({
+      searchQuery: query,
+      currentPage: 1,
+      hits: []
+    })
   };
 
 
 
   fetchHits = () => {
-     const{currentPage, searchQuery}=this.state
-      axios.get(`https:pixabay.com/api/?q=${searchQuery}&page=${currentPage}&key=20314649-0be4b13706b99da5b0e7a5a44&image_type=photo&orientation=horizontal&per_page=12`)
-      .then(response => {
-        console.log(response.data.hits);
+    const { currentPage, searchQuery } = this.state
+
+    const options = {
+        searchQuery,
+        currentPage
+    }
+
+
+  // newsApi
+  //     .fetchArticles(options)
+  //     .then(articles => {
+  //       this.setState(prevState => ({
+  //         articles: [...prevState.articles, ...articles],
+  //         currentPage: prevState.currentPage + 1,
+  //       }));
+  //     })
+
+
+    api
+      .fetchHits(options)
+       .then(hits => {
         this.setState(prevState => ({
-          hits: [...prevState.hits, ...response.data.hits],
+          hits: [...prevState.hits, ...hits],
           currentPage: prevState.currentPage + 1,
         }));
       });
