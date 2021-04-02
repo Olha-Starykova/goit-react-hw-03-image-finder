@@ -8,6 +8,8 @@ class App extends Component {
     hits: [],
     currentPage: 1,
     searchQuery: '',
+    isLoading: false,
+    error: null
   };
  
 
@@ -22,64 +24,65 @@ class App extends Component {
     // console.log(query)
     this.setState({
       searchQuery: query,
-      currentPage: 1,
-      hits: []
+      currentPage: 1, 
+      hits: [],
+      error: null
     })
   };
 
 
 
   fetchHits = () => {
-    const { currentPage, searchQuery } = this.state
+    const { currentPage, searchQuery} = this.state;
 
     const options = {
-        searchQuery,
-        currentPage
-    }
+      searchQuery,
+      currentPage
+    };
 
-
-  // newsApi
-  //     .fetchArticles(options)
-  //     .then(articles => {
-  //       this.setState(prevState => ({
-  //         articles: [...prevState.articles, ...articles],
-  //         currentPage: prevState.currentPage + 1,
-  //       }));
-  //     })
-
-
+    this.setState({ isLoading: true });
+ 
     api
       .fetchHits(options)
-       .then(hits => {
+      .then(hits => {
         this.setState(prevState => ({
           hits: [...prevState.hits, ...hits],
           currentPage: prevState.currentPage + 1,
         }));
-      });
-  }
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
+  };
 
 // webformatURL - ссылка на маленькое изображение для списка карточек
 // largeImageURL - ссылка на большое изображение для модального окна
 
   render() {
-    const {hits} = this.state
+    const { hits, isLoading, error} = this.state
+    
     return (
       <div>
-   
+        {error && <h1>Попробуте перезагрузить страницу</h1>}
         <Searchbar onSubmit={this.onChangeQuery} />
+
+        {isLoading && <h1>Загружаем...</h1>}
+        
+
         <ul>
           {hits.map(({ id, webformatURL }) =>
-            <li key={id}>  
+            <li key={id}>
             
               <img src={webformatURL} alt={webformatURL} />
               
             </li>)}
         </ul>
-  <button type='button' onClick={this.fetchHits}>Загрузить еще</button>
+
+        {hits.length > 0 && !isLoading && (<button type='button' onClick={this.fetchHits}>Загрузить еще</button>)}
+
 
       </div>
     );
-    }
+  };
 };
 
 export default App;
