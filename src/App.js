@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
  import Searchbar from './components/Searchbar/Searchbar'
 import api from './services/api'
+import ImageGallery from './components/ImageGallery/ImageGallery'
+import Modal from './components/Modal/Modal'
 
 
 class App extends Component {
@@ -9,7 +11,11 @@ class App extends Component {
     currentPage: 1,
     searchQuery: '',
     isLoading: false,
-    error: null
+    error: null,
+    // showModal: true
+     webformatURL: ''
+  
+
   };
  
 
@@ -24,9 +30,10 @@ class App extends Component {
     // console.log(query)
     this.setState({
       searchQuery: query,
-      currentPage: 1, 
+      currentPage: 1,
       hits: [],
-      error: null
+      error: null,
+    
     })
   };
 
@@ -51,32 +58,46 @@ class App extends Component {
         }));
       })
       .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ isLoading: false }));
+      .finally(() => this.setState({ isLoading: false}));
   };
+
+   toggleModal = () => {
+    this.setState(state => ({
+      // showModal: !state.showModal
+      webformatURL: !state.webformatURL
+    }));
+  }
 
 // webformatURL - ссылка на маленькое изображение для списка карточек
 // largeImageURL - ссылка на большое изображение для модального окна
 
   render() {
-    const { hits, isLoading, error} = this.state
+    const { hits, isLoading, error, showModal, largeImageURL, webformatURL } = this.state
+   
     
     return (
       <div>
         {error && <h1>Попробуте перезагрузить страницу</h1>}
+
         <Searchbar onSubmit={this.onChangeQuery} />
 
         {isLoading && <h1>Загружаем...</h1>}
-        
 
-        <ul>
-          {hits.map(({ id, webformatURL }) =>
-            <li key={id}>
-            
-              <img src={webformatURL} alt={webformatURL} />
-              
-            </li>)}
-        </ul>
+        <ImageGallery hits={hits} />
 
+
+          {webformatURL && <Modal  onClose={this.toggleModal}>
+          <p>Привет это children</p>
+
+          {/* <img src={largeImageURL } alt={largeImageURL }/> */}
+          
+          <button type="button" onClick={this.toggleModal}> закрыть модальное окно </button>
+          
+        </Modal>}
+
+       
+
+     
         {hits.length > 0 && !isLoading && (<button type='button' onClick={this.fetchHits}>Загрузить еще</button>)}
 
 

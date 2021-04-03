@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import './Searchbar.css'
  
 
 class Searchbar extends Component{
@@ -13,7 +15,7 @@ class Searchbar extends Component{
         })
     };
 
-    handleSubmit = e => {
+    handleSubmit = e => { 
         e.preventDefault()
         // console.log(this.state)
         this.props.onSubmit(this.state.query)
