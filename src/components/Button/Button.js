@@ -1,18 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { button } from './Button.module.css';
+ import  './Button.css';
 
-const Button = ({  }) => {
-
+const Button = ({ fetchHits }) => {
+  const clickfetchHits = () => {
+   fetchHits();
+  };
   return (
-    <button type="button" className={button} onClick={handelClick}>
+    <button type="button" className="Button" onClick={clickfetchHits}>
       Load more
     </button>
+    
   );
 };
 
 Button.propTypes = {
-  serviceSearchImages: PropTypes.func.isRequired,
+  fetchHits: PropTypes.func.isRequired,
 };
 
 export default Button;

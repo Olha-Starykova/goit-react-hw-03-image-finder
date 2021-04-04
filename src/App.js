@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import api from './services/api'
 import ImageGallery from './components/ImageGallery/ImageGallery'
 import Modal from './components/Modal/Modal'
+import Button from './components/Button/Button';
+import Loader from './components/Loader/Loader'
 
 
 class App extends Component {
@@ -13,18 +15,15 @@ class App extends Component {
     isLoading: false,
     error: null,
     showModal: false,
-    //  webformatURL: ''
     largeImageURL: ''
-  
-
   };
  
 
     componentDidUpdate(prevProps, prevState) {
     if (prevState.searchQuery !== this.state.searchQuery) {
       this.fetchHits()
-    }
-  }
+      };
+  };
  
   //данные с сабмита
   onChangeQuery = query => {
@@ -34,14 +33,13 @@ class App extends Component {
       currentPage: 1,
       hits: [],
       error: null,
-    
-    })
+    });
   };
 
 
 
   fetchHits = () => {
-    const { currentPage, searchQuery} = this.state;
+    const { currentPage, searchQuery } = this.state;
 
     const options = {
       searchQuery,
@@ -56,32 +54,30 @@ class App extends Component {
         this.setState(prevState => ({
           hits: [...prevState.hits, ...hits],
           currentPage: prevState.currentPage + 1,
-        }));
+        }))
       })
       .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ isLoading: false}));
+      .finally(() => (this.setState({ isLoading: false }),
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth',
+        }))
+      )
   };
-// webformatURL: true
   
   
   toggleModal = (largeImageURL) => {
-     
-     
-     //console.log(largeImageURL)
+    //console.log(largeImageURL)
     this.setState(state => ({
       showModal: !state.showModal,
       largeImageURL
-      // webformatURL: !state.webformatURL
     }));
-  }
+  };
 
-// webformatURL - ссылка на маленькое изображение для списка карточек
-// largeImageURL - ссылка на большое изображение для модального окна
 
   render() {
     const { hits, isLoading, error, showModal, largeImageURL  } = this.state
-  // console.log(showModal)
-    
+     
     return (
       <div>
         {error && <h1>Попробуте перезагрузить страницу</h1>}
@@ -96,9 +92,13 @@ class App extends Component {
         {showModal && <Modal onClose={this.toggleModal} largeImageURL={largeImageURL} />}
           
      
-        {(hits.length > 0) && !isLoading && (<button type='button' onClick={this.fetchHits}>Загрузить еще</button>)}
+        {(hits.length > 0) && !isLoading && <Button fetchHits={this.fetchHits} />}
 
 
+
+        {isLoading && <Loader />}
+
+              
       </div>
     );
   };
