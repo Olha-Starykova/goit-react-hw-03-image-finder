@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import defaultImage from '../ImageGallery/default.jpg'
 //метод создать портал из реакт дома
  import { createPortal } from 'react-dom';
 import './Modal.css';
@@ -48,4 +50,14 @@ export default class Modal extends Component {
       );
   }
 }
+
+Modal.defaultProps = {
+      largeImageURL: defaultImage,
+
+};
+
+
+Modal.propTypes = {
+  largeImage: PropTypes.string,
+};
   

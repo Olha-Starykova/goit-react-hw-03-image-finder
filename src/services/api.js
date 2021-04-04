@@ -1,4 +1,5 @@
 import axios from 'axios';
+import PropTypes from 'prop-types';
  
 
 const fetchHits = ({ searchQuery = '', currentPage = 1, pageSize = 12 }) => {
@@ -8,5 +9,13 @@ const fetchHits = ({ searchQuery = '', currentPage = 1, pageSize = 12 }) => {
             response.data.hits);
   
 };
+
+
+fetchHits.propTypes = {
+    searchQuery: PropTypes.string.isRequired,
+    currentPage: PropTypes.number,
+    pageSize: PropTypes.number
+};
+
 
 export default { fetchHits };

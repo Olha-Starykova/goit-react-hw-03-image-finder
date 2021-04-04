@@ -1,5 +1,7 @@
 import React from 'react';
- import './ImageGalleryItem.css'
+import PropTypes from 'prop-types';
+import './ImageGalleryItem.css'
+ import defaultImage from '../ImageGallery/default.jpg'
 
 const ImageGalleryItem = ({ webformatURL, showModal, largeImageURL }) => {
     
@@ -9,7 +11,21 @@ const ImageGalleryItem = ({ webformatURL, showModal, largeImageURL }) => {
             <img src={webformatURL} alt={webformatURL} className="ImageGalleryItem-image" />
         </li>
 
-    )
+    );
 }
+
+
+ImageGalleryItem.defaultProps = {
+    webformatURL: defaultImage,
+    largeImageURL: defaultImage,
+
+};
+
+ImageGalleryItem.propTypes = {
+    showModal: PropTypes.func.isRequired,
+    webformatURL: PropTypes.string,
+    largeImageURL: PropTypes.string
+};
+
 
 export default ImageGalleryItem;
