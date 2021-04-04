@@ -12,8 +12,9 @@ class App extends Component {
     searchQuery: '',
     isLoading: false,
     error: null,
-    // showModal: true
-     webformatURL: ''
+    showModal: false,
+    //  webformatURL: ''
+    largeImageURL: ''
   
 
   };
@@ -60,11 +61,17 @@ class App extends Component {
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false}));
   };
-
-   toggleModal = () => {
+// webformatURL: true
+  
+  
+  toggleModal = (largeImageURL) => {
+     
+     
+     //console.log(largeImageURL)
     this.setState(state => ({
-      // showModal: !state.showModal
-      webformatURL: !state.webformatURL
+      showModal: !state.showModal,
+      largeImageURL
+      // webformatURL: !state.webformatURL
     }));
   }
 
@@ -72,8 +79,8 @@ class App extends Component {
 // largeImageURL - ссылка на большое изображение для модального окна
 
   render() {
-    const { hits, isLoading, error, showModal, largeImageURL, webformatURL } = this.state
-   
+    const { hits, isLoading, error, showModal, largeImageURL  } = this.state
+  // console.log(showModal)
     
     return (
       <div>
@@ -83,22 +90,13 @@ class App extends Component {
 
         {isLoading && <h1>Загружаем...</h1>}
 
-        <ImageGallery hits={hits} />
+        <ImageGallery showModal={this.toggleModal} hits={hits} />
 
 
-          {webformatURL && <Modal  onClose={this.toggleModal}>
-          <p>Привет это children</p>
-
-          {/* <img src={largeImageURL } alt={largeImageURL }/> */}
+        {showModal && <Modal onClose={this.toggleModal} largeImageURL={largeImageURL} />}
           
-          <button type="button" onClick={this.toggleModal}> закрыть модальное окно </button>
-          
-        </Modal>}
-
-       
-
      
-        {hits.length > 0 && !isLoading && (<button type='button' onClick={this.fetchHits}>Загрузить еще</button>)}
+        {(hits.length > 0) && !isLoading && (<button type='button' onClick={this.fetchHits}>Загрузить еще</button>)}
 
 
       </div>

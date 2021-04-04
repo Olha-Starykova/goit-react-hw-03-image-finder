@@ -4,12 +4,12 @@ import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 
 
 
-const ImageGallery = ({ hits }) => {
+const ImageGallery = ({ hits, showModal }) => {
     return (
         <ul className="ImageGallery">
-            {hits.map(({ id, webformatURL }) => (
+            {hits.map(({ id, webformatURL, largeImageURL }) => (
                 
-                <ImageGalleryItem id={id} webformatURL={webformatURL} />)
+                <ImageGalleryItem key={id} webformatURL={webformatURL} largeImageURL={largeImageURL} showModal={showModal }/>)
                
             )
             }
